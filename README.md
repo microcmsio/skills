@@ -29,9 +29,9 @@ references/
 ```bash
 mkdir -p .claude/skills/microcms-docs/references
 curl -o .claude/skills/microcms-docs/SKILL.md \
-  https://raw.githubusercontent.com/microcmsio/microcms-agent-skills/main/SKILL.md
+  https://raw.githubusercontent.com/microcmsio/microcms-agent-skills/main/microcms-docs/SKILL.md
 curl -o .claude/skills/microcms-docs/references/urls.md \
-  https://raw.githubusercontent.com/microcmsio/microcms-agent-skills/main/references/urls.md
+  https://raw.githubusercontent.com/microcmsio/microcms-agent-skills/main/microcms-docs/references/urls.md
 ```
 
 **全プロジェクト共通**
@@ -39,9 +39,9 @@ curl -o .claude/skills/microcms-docs/references/urls.md \
 ```bash
 mkdir -p ~/.claude/skills/microcms-docs/references
 curl -o ~/.claude/skills/microcms-docs/SKILL.md \
-  https://raw.githubusercontent.com/microcmsio/microcms-agent-skills/main/SKILL.md
+  https://raw.githubusercontent.com/microcmsio/microcms-agent-skills/main/microcms-docs/SKILL.md
 curl -o ~/.claude/skills/microcms-docs/references/urls.md \
-  https://raw.githubusercontent.com/microcmsio/microcms-agent-skills/main/references/urls.md
+  https://raw.githubusercontent.com/microcmsio/microcms-agent-skills/main/microcms-docs/references/urls.md
 ```
 
 導入後、「microCMS の API でコンテンツ一覧を取得する方法を教えて」のように聞くと、スキルが自動で発動してドキュメントを参照しながら回答します。
@@ -55,9 +55,9 @@ Cursor には Claude Code のようなスキル機構はありませんが、フ
 ```bash
 mkdir -p .cursor/rules/microcms-docs/references
 curl -o .cursor/rules/microcms-docs/SKILL.md \
-  https://raw.githubusercontent.com/microcmsio/microcms-agent-skills/main/SKILL.md
+  https://raw.githubusercontent.com/microcmsio/microcms-agent-skills/main/microcms-docs/SKILL.md
 curl -o .cursor/rules/microcms-docs/references/urls.md \
-  https://raw.githubusercontent.com/microcmsio/microcms-agent-skills/main/references/urls.md
+  https://raw.githubusercontent.com/microcmsio/microcms-agent-skills/main/microcms-docs/references/urls.md
 ```
 
 エージェントへの指示例:
@@ -72,7 +72,7 @@ curl -o .cursor/rules/microcms-docs/references/urls.md \
 
 ```bash
 git clone https://github.com/microcmsio/microcms-agent-skills.git
-cp -r microcms-agent-skills/{SKILL.md,references} <導入先>/microcms-docs/
+cp -r microcms-agent-skills/microcms-docs <導入先>/
 ```
 
 ---
