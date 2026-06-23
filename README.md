@@ -79,4 +79,11 @@ cp -r microcms-agent-skills/{SKILL.md,references} <導入先>/microcms-docs/
 
 ## 公式 MCP サーバーとの併用
 
-似ているものとして [`microcms-document-mcp-server`](https://document.microcms.io/mcp-server/microcms-document-mcp-server) を提供しています。MCPでの利用の方がスムーズな場合はこちらを利用ください。
+microCMS 公式が 2 つの MCP サーバーを提供しています。
+
+| MCP サーバー | 用途 |
+|------------|------|
+| [`microcms-mcp-server`](https://document.microcms.io/mcp-server/microcms-mcp-server) | コンテンツの入稿・更新・削除などの操作 |
+| [`microcms-document-mcp-server`](https://document.microcms.io/mcp-server/microcms-document-mcp-server) | このスキルと同様のドキュメント参照 |
+
+コンテンツの入稿・管理を行いたい場合は `microcms-mcp-server` を、ドキュメント参照の精度をさらに高めたい場合は `microcms-document-mcp-server` を併用してください。
