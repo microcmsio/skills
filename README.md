@@ -86,4 +86,4 @@ microCMS 公式が 2 つの MCP サーバーを提供しています。
 | [`microcms-mcp-server`](https://document.microcms.io/mcp-server/microcms-mcp-server) | コンテンツの入稿・更新・削除などの操作 |
 | [`microcms-document-mcp-server`](https://document.microcms.io/mcp-server/microcms-document-mcp-server) | このスキルと同様のドキュメント参照 |
 
-コンテンツの入稿・管理を行いたい場合は `microcms-mcp-server` を、MCP での利用が好ましい場合はこのスキルの代わりに `microcms-document-mcp-server` を利用してください。
+コンテンツの入稿・管理を行いたい場合は `microcms-mcp-server` を併用してください。`microcms-document-mcp-server` はこのスキルと役割は同じですが、MCP での利用が好ましい場合はそちらをお使いください。
