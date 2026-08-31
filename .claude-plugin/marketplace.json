@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "microcms",
+  "owner": { "name": "microCMS", "url": "https://microcms.io" },
+  "description": "microCMS 公式 Agent Skills",
+  "plugins": [
+    {
+      "name": "microcms",
+      "source": "./"
+    }
+  ]
+}
