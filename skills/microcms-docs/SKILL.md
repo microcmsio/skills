@@ -1,13 +1,14 @@
 ---
 name: microcms-docs
 description: microCMSの公式開発者ドキュメント(document.microcms.io)を参照し、API仕様の解説・コード例の生成・操作手順の回答を行う。コンテンツAPI、マネジメントAPI、画像API、管理画面マニュアル、Next.js/Nuxt/Astro/Remix/Gatsby/JavaScript/PHP/Ruby/Go/iOS/Android などのフレームワークチュートリアルを扱う。microCMSのAPIキー認証、クエリパラメータ(filters/fields/limit/orders)、Webhook、フィールドタイプ設定、画像変換、SDK利用方法、エラーレスポンスなどに関する質問で使用する。
+license: MIT
 ---
 
 # microCMS ドキュメント参照スキル
 
 ## 概要
 
-microCMS公式開発者ドキュメント `document.microcms.io` に対し、ユーザーの質問に応じた適切なページを特定し、WebFetchで内容を取得して回答する。記憶や推測ではなく、常に最新のドキュメントを根拠とする。
+microCMS公式開発者ドキュメント `document.microcms.io` に対し、ユーザーの質問に応じた適切なページを特定し、Web取得ツールで内容を取得して回答する。記憶や推測ではなく、常に最新のドキュメントを根拠とする。
 
 ## ワークフロー
 
@@ -28,22 +29,22 @@ microCMS公式開発者ドキュメント `document.microcms.io` に対し、ユ
 
 ### 2. URLの特定
 
-`references/urls.md` を読み、関連URLを特定する。**URLを推測で生成してはならない**。`urls.md` に該当ページが無い場合は、最も近いインデックスページ（例: `/tutorial/next/` のトップ）をfetchして配下のページ一覧を取得する。
+`references/urls.md` を読み、関連URLを特定する。**URLを推測で生成してはならない**。`urls.md` に該当ページが無い場合は、最も近いインデックスページ（例: `/tutorial/next/` のトップ）を取得して配下のページ一覧を確認する。
 
 ### 3. ドキュメントの取得
 
-特定したURLの**末尾に `.md` を付与してWebFetchで取得する**。`.md` 付きでアクセスすると `text/markdown` 形式で本文が返るため、HTMLパース不要でLLMが扱いやすい。
+特定したURLの**末尾に `.md` を付与して取得する**。取得には、利用中のエージェントが持つWeb取得の手段（Web取得ツール、`curl` など）を使う。`.md` 付きでアクセスすると `text/markdown` 形式で本文が返るため、HTMLパース不要でLLMが扱いやすい。
 
 例:
 - HTML版: `https://document.microcms.io/content-api/get-list-contents`
 - **Markdown版（こちらを使う）**: `https://document.microcms.io/content-api/get-list-contents.md`
 
-複数URLが必要な場合は**並列**で取得する（単一のメッセージ内に複数のWebFetch呼び出しを記述）。
+複数URLが必要な場合は、可能な限り**まとめて取得する**（並列取得に対応した環境では並列で取得する）。
 
-WebFetchのpromptは目的に応じて具体化する:
-- コード例が欲しい場合: 「コード例（特に〜の部分）を抽出してください」
-- 仕様確認: 「〜のパラメータ仕様、デフォルト値、必須/任意を一覧化してください」
-- 手順確認: 「〜を行うための手順を順番に抽出してください」
+取得時は、そのページから何を読み取りたいのかを明確にしてから読む:
+- コード例が欲しい場合: コード例（特に該当箇所）を抽出する
+- 仕様確認: パラメータ仕様、デフォルト値、必須/任意を一覧化する
+- 手順確認: 目的の操作を行うための手順を順番に抽出する
 
 ### 4. 回答の生成
 
@@ -57,7 +58,7 @@ WebFetchのpromptは目的に応じて具体化する:
 ## 重要な注意事項
 
 1. **URLは必ず `references/urls.md` から確認**。`/manual/foo` のようなパスを記憶や類推で組み立てない。
-2. **WebFetch時はURL末尾に `.md` を付与する**。Markdown形式で本文が返り、HTML版より精度・効率が向上する。
+2. **取得時はURL末尾に `.md` を付与する**。Markdown形式で本文が返り、HTML版より精度・効率が向上する。
 3. **ベースURLは `https://document.microcms.io`**。`docs.microcms.io` や `microcms.com/docs` 等の類似URLは存在しない（誤記の可能性）。
 4. **APIエンドポイント**: コンテンツAPIは `https://{service-id}.microcms.io/api/v1/{endpoint}`、マネジメントAPIは `https://{service-id}.microcms-management.io/api/v1/`。
 5. **認証**: 現行は `X-MICROCMS-API-KEY` ヘッダー。旧 `X-API-KEY` は非推奨。
@@ -65,7 +66,7 @@ WebFetchのpromptは目的に応じて具体化する:
 
 ## ユーザーへの確認
 
-以下のような場面ではユーザーに判断を仰ぐ（AskUserQuestion を使用）:
+以下のような場面ではユーザーに確認し、判断を仰ぐ:
 
 - 質問が曖昧で複数のカテゴリに該当しうる場合（例: 「画像を扱いたい」→ 画像API or 画像フィールド or メディア管理？）
 - 利用フレームワーク/SDKが特定できず、複数のチュートリアルから選ぶ必要がある場合

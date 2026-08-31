@@ -1,17 +1,13 @@
----
-name: microCMSドキュメント URL一覧
-description: document.microcms.io配下の主要ドキュメントURLをカテゴリ別に整理した参照ファイル
----
 
 # microCMS ドキュメント URL リファレンス
 
 ベースURL: `https://document.microcms.io`
 
-ユーザーの質問内容から該当セクションを特定し、対応するURLをWebFetchで取得する。複数URLが関連する場合は並列で取得すること。
+ユーザーの質問内容から該当セクションを特定し、対応するURLを取得する。複数URLが関連する場合はまとめて取得すること。
 
 ## ⭐ 重要: `.md` サフィックスでMarkdownを取得する
 
-このサイトは、**URL末尾に `.md` を付与するとMarkdown形式で本文を返す**（`Content-Type: text/markdown`）。WebFetchではこちらを使うこと。
+このサイトは、**URL末尾に `.md` を付与するとMarkdown形式で本文を返す**（`Content-Type: text/markdown`）。取得時はこちらを使うこと。
 
 - ❌ `https://document.microcms.io/content-api/get-list-contents`（HTML）
 - ✅ `https://document.microcms.io/content-api/get-list-contents.md`（Markdown）
@@ -217,7 +213,7 @@ description: document.microcms.io配下の主要ドキュメントURLをカテ�
 | iOS (Swift) | `/tutorial/ios/` |
 | Android (Kotlin) | `/tutorial/android/` |
 
-各フレームワークのトップページをWebFetchすると、配下のページ一覧（環境構築、データ取得、デプロイなど）が取得できる。
+各フレームワークのトップページを取得すると、配下のページ一覧（環境構築、データ取得、デプロイなど）が取得できる。
 
 ---
 

@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin.json",
+  "name": "microcms",
+  "displayName": "microCMS",
+  "description": "microCMS 公式 Agent Skills。公式ドキュメントを参照して API 仕様や操作手順に答えます。API キー不要。",
+  "version": "0.1.0",
+  "author": { "name": "microCMS", "url": "https://microcms.io" },
+  "homepage": "https://document.microcms.io",
+  "repository": "https://github.com/microcmsio/skills",
+  "license": "MIT",
+  "keywords": ["microcms", "headless-cms", "documentation", "cms"]
+}
