@@ -5,26 +5,28 @@
 #   bash scripts/install.sh                 # ./.agents/skills/ (プロジェクト単位)
 #   bash scripts/install.sh --global        # ~/.agents/skills/ (全プロジェクト共通)
 #   bash scripts/install.sh --dir <path>    # 任意のディレクトリ
-#
-# リポジトリを clone していない場合は、一時ディレクトリに clone してから導入する。
 set -euo pipefail
 
 REPO_URL="https://github.com/microcmsio/skills.git"
 DEST=".agents/skills"
 
+usage() {
+  awk 'NR > 1 && /^#/ { sub(/^# ?/, ""); print; next } NR > 1 { exit }' "$0"
+}
+
 while [ $# -gt 0 ]; do
   case "$1" in
     --global) DEST="$HOME/.agents/skills"; shift ;;
     --dir)    DEST="${2:?--dir にはパスを指定してください}"; shift 2 ;;
-    -h|--help) sed -n '2,10p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+    -h|--help) usage; exit 0 ;;
     *) echo "不明なオプション: $1" >&2; exit 1 ;;
   esac
 done
 
-# スキルの正本 (skills/) を探す。スクリプトと同じリポジトリ内にあればそれを使う。
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SRC="$SCRIPT_DIR/../skills"
 
+# curl 等でスクリプト単体を実行された場合に備え、リポジトリを取得してから導入する。
 if [ ! -d "$SRC" ]; then
   TMP_DIR="$(mktemp -d)"
   trap 'rm -rf "$TMP_DIR"' EXIT
