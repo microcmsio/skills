@@ -103,7 +103,6 @@ skills/                        # スキルの正本。すべてのツールの�
 ├── plugin.json
 └── marketplace.json
 scripts/                       # install.sh / validate.sh
-docs/                          # CONTRIBUTING.md / skill-template/
 ```
 
 ---
@@ -125,14 +124,9 @@ microCMS 公式が 2 つの MCP サーバーを提供しています。
 
 ---
 
-## コントリビュート
+## フィードバック
 
-スキルの追加手順とチェックリストは [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) を参照してください。
-
-```bash
-bash scripts/validate.sh     # 規格・発見可能性・プラグイン定義の検証
-claude --plugin-dir .        # ローカルでプラグインとして読み込んで動作確認
-```
+不具合の報告や改善の提案は [Issues](https://github.com/microcmsio/skills/issues) までお寄せください。
 
 ## ライセンス
 
