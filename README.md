@@ -3,14 +3,7 @@
 microCMS 公式の [Agent Skills](https://agentskills.io) です。Claude Code / Cursor / Codex など、
 Agent Skills 規格に対応した 40 以上の AI エージェントで動作します。
 
-インストールすると、AI が microCMS に関する質問に対して**公式ドキュメントをその場で参照し、出典付きで**回答するようになります。
-
-|  | スキルなし | スキルあり |
-|---|---|---|
-| 情報源 | 学習データの記憶（古い可能性） | 公式ドキュメントをその場で取得 |
-| 認証ヘッダー | 非推奨の `X-API-KEY` を出すことがある | 現行の `X-MICROCMS-API-KEY` |
-| 出典 | なし。検証できない | 参照したドキュメント URL を必ず提示 |
-| 不明点 | それらしいコードを推測で埋める | 「ドキュメントに記載がない」と伝える |
+インストールすると、AIがmicroCMSに関するAgent Skillsを使ってタスクを実行したり、質問に回答したりするようになります。
 
 ## スキル一覧
 
@@ -64,8 +57,6 @@ gh skill update --all
 /plugin install microcms@microcms
 ```
 
-**API キーは聞かれません。** MCP サーバーを同梱していないため、インストールはスキルのコピーだけで完了します。
-
 ### 手動コピー
 
 ```bash
@@ -74,13 +65,11 @@ bash skills/scripts/install.sh              # ./.agents/skills/ に導入
 bash skills/scripts/install.sh --global     # ~/.agents/skills/ に導入
 ```
 
-`.agents/skills/` は Cursor / Codex などが読む、事実上のクロスツール共通パスです。
-
 ---
 
 ## 使い方
 
-インストール後は、**普通に質問するだけ**です。スキルを呼び出す操作は要りません。
+インストール後は、**普通にAIと会話するだけ**でスキルを利用できます。
 
 > microCMS でカテゴリ別に記事を 10 件取得したい
 
@@ -91,22 +80,6 @@ bash skills/scripts/install.sh --global     # ~/.agents/skills/ に導入
 
 ---
 
-## リポジトリ構成
-
-```
-skills/                        # スキルの正本。すべてのツールの入口
-└── microcms-docs/
-    ├── SKILL.md               # スキル本体（ワークフロー・注意事項）
-    └── references/
-        └── urls.md            # ドキュメント URL 一覧（カテゴリ別）
-.claude-plugin/                # Claude Code プラグイン定義
-├── plugin.json
-└── marketplace.json
-scripts/                       # install.sh / validate.sh
-```
-
----
-
 ## 公式 MCP サーバーとの併用
 
 microCMS 公式が 2 つの MCP サーバーを提供しています。
@@ -114,19 +87,11 @@ microCMS 公式が 2 つの MCP サーバーを提供しています。
 | MCP サーバー | 用途 |
 |------------|------|
 | [`microcms-mcp-server`](https://document.microcms.io/mcp-server/microcms-mcp-server) | コンテンツの入稿・更新・削除などの操作 |
-| [`microcms-document-mcp-server`](https://document.microcms.io/mcp-server/microcms-document-mcp-server) | このスキルと同様のドキュメント参照 |
+| [`microcms-document-mcp-server`](https://document.microcms.io/mcp-server/microcms-document-mcp-server) | 公式ドキュメント参照 |
 
 コンテンツの入稿・管理を行いたい場合は `microcms-mcp-server` を併用してください。
-`microcms-document-mcp-server` はこのスキルと役割は同じですが、MCP での利用が好ましい場合はそちらをお使いください。
-
-なお、**このリポジトリのスキル／プラグインに MCP サーバーは同梱していません。** MCP を使う場合は
-各サーバーのドキュメントに従って別途設定してください。
 
 ---
-
-## フィードバック
-
-不具合の報告や改善の提案は [Issues](https://github.com/microcmsio/skills/issues) までお寄せください。
 
 ## ライセンス
 
