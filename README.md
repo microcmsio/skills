@@ -73,12 +73,6 @@ Claude Code が読む `.claude/skills/` には相対シンボリックリンク�
 .claude/skills/microcms-docs -> ../../.agents/skills/microcms-docs
 ```
 
-| オプション | 説明 |
-|-----------|------|
-| `--global` | `~/.agents/skills/` と `~/.claude/skills/` に導入する |
-| `--no-link` | `.claude/skills/` へのリンクを張らない |
-| `--force` | リンク先に同名のディレクトリが実在する場合も置き換える |
-
 ---
 
 ## 使い方
