@@ -19,8 +19,7 @@
 
 英語版が必要な場合は、パスの先頭に `/en` を付ける（一部のみ対応）。
 
-- 正: `https://document.microcms.io/en/content-api/introduction.md`
-- 誤: `https://document.microcms.io/content-api/introduction/en.md`（404）
+例: `https://document.microcms.io/en/content-api/introduction.md`
 
 > [!IMPORTANT]
 > 存在しないパスにアクセスしても 404 ではなく **200 で HTML が返る**ことがある。
