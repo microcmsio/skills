@@ -76,7 +76,6 @@ Claude Code が読む `.claude/skills/` には相対シンボリックリンク�
 | オプション | 説明 |
 |-----------|------|
 | `--global` | `~/.agents/skills/` と `~/.claude/skills/` に導入する |
-| `--dir <path>` | 任意のディレクトリに導入する（リンクは張らない） |
 | `--no-link` | `.claude/skills/` へのリンクを張らない |
 | `--force` | リンク先に同名のディレクトリが実在する場合も置き換える |
 
