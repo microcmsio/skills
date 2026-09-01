@@ -5,16 +5,27 @@
 
 ユーザーの質問内容から該当セクションを特定し、対応するURLを取得する。複数URLが関連する場合はまとめて取得すること。
 
-## ⭐ 重要: `.md` サフィックスでMarkdownを取得する
+この一覧に該当ページが無い場合、または取得結果がMarkdownでなかった場合は、公式のページ一覧 `https://document.microcms.io/llms.txt`（約13KB）を取得して探す。全ページのタイトルとMarkdown版URLが列挙されている。
+なお `https://document.microcms.io/llms-full.txt` は全文を結合した750KB以上のファイルのため、取得してはならない。
+
+## 重要: `.md` サフィックスでMarkdownを取得する
 
 このサイトは、**URL末尾に `.md` を付与するとMarkdown形式で本文を返す**（`Content-Type: text/markdown`）。取得時はこちらを使うこと。
 
-- ❌ `https://document.microcms.io/content-api/get-list-contents`（HTML）
-- ✅ `https://document.microcms.io/content-api/get-list-contents.md`（Markdown）
+- 使用しない: `https://document.microcms.io/content-api/get-list-contents`（HTML）
+- 使用する: `https://document.microcms.io/content-api/get-list-contents.md`（Markdown）
 
 以下に列挙するURLパスはすべて末尾に `.md` を付けて使用する。
 
-英語版が必要な場合は、URLの末尾に `/en` を追加するか、`document.microcms.io/en/...` を使用する（一部のみ対応）。
+英語版が必要な場合は、パスの先頭に `/en` を付ける（一部のみ対応）。
+
+例: `https://document.microcms.io/en/content-api/introduction.md`
+
+> [!IMPORTANT]
+> 存在しないパスにアクセスしても 404 ではなく **200 で HTML が返る**ことがある。
+> `Content-Type` が `text/markdown` でない場合、そのURLは無効と判断し、`llms.txt` から正しいURLを探し直すこと。
+> 特に `/tutorial/next/` のようなセクションのトップURLは `.md` に対応しておらず、
+> 本文を含まない HTML が返る。**以下に列挙した実ページのURLを使うこと。**
 
 ---
 
@@ -196,24 +207,57 @@
 
 ## チュートリアル
 
-フレームワーク別の統合ガイド。`/tutorial/{framework}/` 形式（複数ページ構成）。
+フレームワーク別の統合ガイド。**セクションのトップURL（`/tutorial/next/` など）は `.md` に対応していない**ため、
+必ず以下の実ページURLを使用する。
 
-| フレームワーク | ベースURL |
-|--------------|----------|
-| Next.js | `/tutorial/next/` |
-| Nuxt 3 | `/tutorial/nuxt3/` |
-| Nuxt 2 | `/tutorial/nuxt/` |
-| Gatsby | `/tutorial/gatsby/` |
-| Astro | `/tutorial/astro/` |
-| Remix | `/tutorial/remix/` |
-| JavaScript (Vanilla) | `/tutorial/javascript/` |
-| PHP | `/tutorial/php/` |
-| Ruby | `/tutorial/ruby/` |
-| Go | `/tutorial/go/` |
-| iOS (Swift) | `/tutorial/ios/` |
-| Android (Kotlin) | `/tutorial/android/` |
+### Next.js
+- `/tutorial/next/next-top` - Next.jsとの連携（概要）
+- `/tutorial/next/next-app-router-getting-started` - Getting Started（App Router）
+- `/tutorial/next/next-app-router-tutorial` - チュートリアル（App Router）
+- `/tutorial/next/next-getting-started` - Getting Started（Pages Router）
+- `/tutorial/next/next-tutorial` - チュートリアル（Pages Router）
 
-各フレームワークのトップページを取得すると、配下のページ一覧（環境構築、データ取得、デプロイなど）が取得できる。
+### Astro
+- `/tutorial/astro/astro-top` - Astroとの連携（概要）
+- `/tutorial/astro/astro-getting-started` - Getting Started
+- `/tutorial/astro/astro-tutorial` - チュートリアル
+
+### Nuxt 2
+- `/tutorial/nuxt/nuxt-top` - Nuxt 2との連携（概要）
+- `/tutorial/nuxt/nuxt-getting-started` - Getting Started
+- `/tutorial/nuxt/nuxt-tutorial` - チュートリアル
+- `/tutorial/nuxt/microcms-blog-clone` - microCMSブログのクローンを作る
+
+### Gatsby
+- `/tutorial/gatsby/gatsby-top` - Gatsbyとの連携（概要）
+- `/tutorial/gatsby/gatsby-getting-started` - Getting Started
+- `/tutorial/gatsby/gatsby-tutorial` - チュートリアル
+
+### JavaScript
+- `/tutorial/javascript/javascript-top` - JavaScriptとの連携（概要）
+- `/tutorial/javascript/javascript-getting-started` - Getting Started（ブラウザ）
+- `/tutorial/javascript/nodejs-getting-started` - Getting Started（サーバー / Node.js）
+
+### PHP
+- `/tutorial/php/php-top` - PHPとの連携（概要）
+- `/tutorial/php/php-getting-started` - Getting Started
+
+### Ruby
+- `/tutorial/ruby/ruby-top` - Rubyとの連携（概要）
+- `/tutorial/ruby/ruby-getting-started` - Getting Started
+
+（`/tutorial/ruby/ruby-sdk` は `.md` 版が提供されていないため使用しない。SDKの情報は `ruby-top` に含まれる）
+
+### Go
+- `/tutorial/go/go-top` - Goとの連携（概要）
+- `/tutorial/go/go-getting-started` - Getting Started
+- `/tutorial/go/go-sdk` - SDK
+
+> [!NOTE]
+> チュートリアルが提供されているのは上記8種類のみ。
+> Remix / Nuxt 3 / iOS / Android のチュートリアルページは**存在しない**。
+> これらについて質問された場合は、ドキュメントに該当ページが無いことを伝えたうえで、
+> 汎用的なコンテンツAPIの仕様（`/content-api/` 配下）や各SDKのリポジトリを案内する。
 
 ---
 
@@ -228,15 +272,18 @@
 
 ## SDK
 
-主要言語の公式SDK情報は、`/tutorial/{lang}/` 配下に含まれる。SDK単体のURLは以下:
+主要言語の公式SDKは GitHub の `microcmsio` organization で公開されている。
 
-- JavaScript SDK: `microcms-js-sdk`（GitHub: `microcmsio/microcms-js-sdk`）
-  - インストール: `npm install microcms-js-sdk`
-  - 使用例は `/tutorial/javascript/`, `/tutorial/next/`, `/tutorial/nuxt3/` などを参照
-- PHP SDK: `microcms-php-sdk`
-- Ruby SDK: `microcms-ruby-sdk`
-- Go SDK: `microcms-go-sdk`
-- Swift SDK: `microcms-swift-sdk`
-- Kotlin SDK: `microcms-kotlin-sdk`
+| SDK | リポジトリ | ドキュメント内の使用例 |
+|-----|-----------|------------------|
+| JavaScript | `microcmsio/microcms-js-sdk` | `/tutorial/javascript/javascript-getting-started`, `/tutorial/next/next-app-router-getting-started` |
+| PHP | `microcmsio/microcms-php-sdk` | `/tutorial/php/php-getting-started` |
+| Ruby | `microcmsio/microcms-ruby-sdk` | `/tutorial/ruby/ruby-top` |
+| Go | `microcmsio/microcms-go-sdk` | `/tutorial/go/go-sdk` |
+| iOS | `microcmsio/microcms-ios-sdk` | ドキュメント内に無し（リポジトリのREADMEを参照） |
+| Android | `microcmsio/microcms-android-sdk` | ドキュメント内に無し（リポジトリのREADMEを参照） |
 
-SDKの具体的なAPIはチュートリアル内のコード例から確認すること。
+JavaScript SDK のインストール: `npm install microcms-js-sdk`
+
+SDKの具体的なAPIは、上記のチュートリアルページのコード例から確認すること。
+iOS / Android はドキュメントサイトにチュートリアルが無いため、GitHubリポジトリを案内する。

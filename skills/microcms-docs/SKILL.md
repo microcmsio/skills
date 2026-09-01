@@ -1,6 +1,6 @@
 ---
 name: microcms-docs
-description: microCMSの公式開発者ドキュメント(document.microcms.io)を参照し、API仕様の解説・コード例の生成・操作手順の回答を行う。コンテンツAPI、マネジメントAPI、画像API、管理画面マニュアル、Next.js/Nuxt/Astro/Remix/Gatsby/JavaScript/PHP/Ruby/Go/iOS/Android などのフレームワークチュートリアルを扱う。microCMSのAPIキー認証、クエリパラメータ(filters/fields/limit/orders)、Webhook、フィールドタイプ設定、画像変換、SDK利用方法、エラーレスポンスなどに関する質問で使用する。
+description: microCMSの公式開発者ドキュメント(document.microcms.io)を参照し、API仕様の解説・コード例の生成・操作手順の回答を行う。コンテンツAPI、マネジメントAPI、画像API、管理画面マニュアル、Next.js/Nuxt/Astro/Gatsby/JavaScript/PHP/Ruby/Go のフレームワークチュートリアルを扱う。microCMSのAPIキー認証、クエリパラメータ(filters/fields/limit/orders)、Webhook、フィールドタイプ設定、画像変換、SDK利用方法、エラーレスポンスなどに関する質問で使用する。
 license: MIT
 ---
 
@@ -29,7 +29,11 @@ microCMS公式開発者ドキュメント `document.microcms.io` に対し、ユ
 
 ### 2. URLの特定
 
-`references/urls.md` を読み、関連URLを特定する。**URLを推測で生成してはならない**。`urls.md` に該当ページが無い場合は、最も近いインデックスページ（例: `/tutorial/next/` のトップ）を取得して配下のページ一覧を確認する。
+`references/urls.md` を読み、関連URLを特定する。**URLを推測で生成してはならない**。
+
+`urls.md` に該当ページが無い場合は、公式のページ一覧 `https://document.microcms.io/llms.txt` を取得して探す。全ページのタイトルとMarkdown版URLが列挙されているため、`urls.md` の記載が古い場合でもここから正しいURLを特定できる。
+
+`llms.txt` にも該当が無ければ、そのページは存在しない。パスを組み立てて試すのではなく、「ドキュメントに該当ページが見つからない」ことをユーザーに伝える。
 
 ### 3. ドキュメントの取得
 
@@ -40,6 +44,11 @@ microCMS公式開発者ドキュメント `document.microcms.io` に対し、ユ
 - **Markdown版（こちらを使う）**: `https://document.microcms.io/content-api/get-list-contents.md`
 
 複数URLが必要な場合は、可能な限り**まとめて取得する**（並列取得に対応した環境では並列で取得する）。
+
+> [!IMPORTANT]
+> 存在しないパスでも 404 ではなく **200 で HTML が返る**ことがある。取得結果が Markdown 本文ではなく HTML だった場合、そのURLは無効と判断する。内容を推測で補ってはならない。
+> その場合は `https://document.microcms.io/llms.txt` を取得し、正しいURLを探し直す（ページがリネームされ `urls.md` の記載が古くなっている可能性がある）。
+> セクションのトップURL（`/tutorial/next/` など）は `.md` に対応していないため、`urls.md` に列挙された実ページのURLを使う。
 
 取得時は、そのページから何を読み取りたいのかを明確にしてから読む:
 - コード例が欲しい場合: コード例（特に該当箇所）を抽出する
@@ -62,7 +71,8 @@ microCMS公式開発者ドキュメント `document.microcms.io` に対し、ユ
 3. **ベースURLは `https://document.microcms.io`**。`docs.microcms.io` や `microcms.com/docs` 等の類似URLは存在しない（誤記の可能性）。
 4. **APIエンドポイント**: コンテンツAPIは `https://{service-id}.microcms.io/api/v1/{endpoint}`、マネジメントAPIは `https://{service-id}.microcms-management.io/api/v1/`。
 5. **認証**: 現行は `X-MICROCMS-API-KEY` ヘッダー。旧 `X-API-KEY` は非推奨。
-6. **言語**: ドキュメントは日本語版が主。英語版が必要な場合のみ `/en/` パスを試す。
+6. **言語**: ドキュメントは日本語版が主。英語版が必要な場合のみ、パス先頭に `/en` を付ける（例: `/en/content-api/introduction.md`）。
+7. **チュートリアルの対応範囲**: Next.js / Astro / Nuxt 2 / Gatsby / JavaScript / PHP / Ruby / Go の8種類のみ。Remix / Nuxt 3 / iOS / Android のチュートリアルページは存在しないため、質問された場合はその旨を伝え、コンテンツAPIの仕様や各SDKのリポジトリを案内する。
 
 ## ユーザーへの確認
 
@@ -74,7 +84,12 @@ microCMS公式開発者ドキュメント `document.microcms.io` に対し、ユ
 
 ## リソース
 
-- `references/urls.md`: ドキュメント全URL一覧（カテゴリ別、簡易説明付き）
+- `references/urls.md`: 主要URL一覧（カテゴリ別、簡易説明付き）とクエリパラメータ早見表。まずこれを参照する。
+- `https://document.microcms.io/llms.txt`: 公式が提供する全ページ一覧（約13KB）。`urls.md` で見つからないとき、または取得結果がMarkdownでなかったときのフォールバックとして取得する。
+
+> [!CAUTION]
+> `https://document.microcms.io/llms-full.txt` は全ページの本文を結合したファイルで **750KB 以上**ある。取得してはならない。
+> `llms.txt` の取得に失敗した場合は `urls.md` の情報だけで回答を続ける。
 
 ## 関連
 
