@@ -87,6 +87,7 @@
 | `/management-api/get-list-contents-management` | コンテンツ一覧取得（管理用） |
 | `/management-api/get-content` | コンテンツ取得（管理用） |
 | `/management-api/patch-contents-status` | コンテンツ公開ステータス変更 |
+| `/management-api/put-contents-reservation` | コンテンツの予約公開 |
 | `/management-api/patch-contents-created-by` | コンテンツ作成者変更 |
 | `/management-api/get-media-v2` | メディア一覧取得 (v2) |
 | `/management-api/get-media-v1` | メディア一覧取得 (v1) |
@@ -162,6 +163,7 @@
 - `/manual/automatic-grant-fields` - 自動付与フィールド
 - `/manual/content-history` - 履歴
 - `/manual/csv-import` - CSVインポート
+- `/manual/csv-export` - CSVエクスポート
 - `/manual/api-preview` - APIプレビュー
 - `/manual/query-parameters-sample-using-api-preview` - クエリパラメータのサンプル
 
