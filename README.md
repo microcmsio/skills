@@ -65,6 +65,21 @@ bash skills/scripts/install.sh              # ./.agents/skills/ に導入
 bash skills/scripts/install.sh --global     # ~/.agents/skills/ に導入
 ```
 
+スキル本体は `.agents/skills/`（Cursor / Codex などが直接読む場所）に置き、
+Claude Code が読む `.claude/skills/` には相対シンボリックリンクを張ります。
+
+```
+.agents/skills/microcms-docs/          # 実体
+.claude/skills/microcms-docs -> ../../.agents/skills/microcms-docs
+```
+
+| オプション | 説明 |
+|-----------|------|
+| `--global` | `~/.agents/skills/` と `~/.claude/skills/` に導入する |
+| `--dir <path>` | 任意のディレクトリに導入する（リンクは張らない） |
+| `--no-link` | `.claude/skills/` へのリンクを張らない |
+| `--force` | リンク先に同名のディレクトリが実在する場合も置き換える |
+
 ---
 
 ## 使い方
