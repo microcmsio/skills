@@ -70,13 +70,11 @@ bash skills/scripts/install.sh --global     # ~/.agents/skills/ に導入
 ## 使い方
 
 インストール後は、**普通にAIと会話するだけ**でスキルを利用できます。
+例えば以下のように入力すると、microcms-docsスキルが自動で発動します。
 
 > microCMS でカテゴリ別に記事を 10 件取得したい
 
-明示的に呼び出したい場合は、Claude Code では `/microcms-docs` と入力します。
-
-> [!TIP]
-> Claude Code では、導入後に `/reload-skills` を実行するとセッションを再起動せずに読み込まれます。
+明示的に呼び出したい場合は、Claude Code では `/microcms-docs` のようにスキル名を入力します。
 
 ---
 
