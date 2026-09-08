@@ -1,6 +1,6 @@
 ---
 name: microcms-docs
-description: microCMSの公式開発者ドキュメント(document.microcms.io)を参照し、API仕様の解説・コード例の生成・操作手順の回答を行う。コンテンツAPI、マネジメントAPI、画像API、管理画面マニュアル、Next.js/Nuxt/Astro/Gatsby/JavaScript/PHP/Ruby/Go のフレームワークチュートリアルを扱う。microCMSのAPIキー認証、クエリパラメータ(filters/fields/limit/orders)、Webhook、フィールドタイプ設定、画像変換、SDK利用方法、エラーレスポンスなどに関する質問で使用する。
+description: microCMSの公式開発者ドキュメント(document.microcms.io)を取得し、API仕様・制限・認証・クエリ・管理画面の操作手順を出典付きで確認する。最新の仕様確認や公式資料・コード例の参照が必要な場合に使用する。プロジェクトの設計・実装・改善はmicrocms-guide、Next.js固有の実装はmicrocms-nextjsを優先し、必要な仕様確認をこのSkillで補う。
 license: MIT
 ---
 
@@ -9,6 +9,10 @@ license: MIT
 ## 概要
 
 microCMS公式開発者ドキュメント `document.microcms.io` に対し、ユーザーの質問に応じた適切なページを特定し、Web取得ツールで内容を取得して回答する。記憶や推測ではなく、常に最新のドキュメントを根拠とする。
+
+## 他のSkillとの使い分け
+
+公式情報の取得と根拠の確認を担当する。設計・実装・改善を進める依頼では、利用可能なら `microcms-guide` または `microcms-nextjs` を使い、必要な仕様確認だけをこのSkillで補う。別Skillが未導入でも資料参照を続ける。Skill名の記載だけで別Skillが自動的に読み込まれるとは想定しない。
 
 ## ワークフロー
 

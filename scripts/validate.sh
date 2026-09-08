@@ -30,8 +30,11 @@ skip() {
   echo
 }
 
-run "Agent Skills 規格の検証 (skills-ref validate)" \
-  npx -y "skills-ref@${SKILLS_REF_VERSION}" validate ./skills/*
+# skills-ref validate は1つのディレクトリを受け取るため、各Skillを個別に検証する。
+for skill_dir in ./skills/*/; do
+  run "Agent Skills 規格の検証 ($(basename "$skill_dir"))" \
+    npx -y "skills-ref@${SKILLS_REF_VERSION}" validate "$skill_dir"
+done
 
 # ディレクトリを動かしたときに npx skills から見えなくなる事故を検出する。
 run "発見可能性の確認 (skills add --list)" \
