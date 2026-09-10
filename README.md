@@ -9,7 +9,11 @@ Agent Skills 規格に対応した 40 以上の AI エージェントで動作�
 
 | スキル名 | 説明 |
 |---------|------|
-| [`microcms-docs`](skills/microcms-docs/) | microCMS 公式開発者ドキュメント（[document.microcms.io](https://document.microcms.io)）を参照し、API 仕様の解説・コード例の生成・操作手順の回答を行う。コンテンツ API、マネジメント API、画像 API、管理画面マニュアル、各種フレームワークチュートリアルに対応 |
+| [`microcms-docs`](skills/microcms-docs/) | 公式開発者ドキュメントから、API仕様・制限・管理画面の操作手順などの最新情報と出典を確認する |
+| [`microcms-guide`](skills/microcms-guide/) | フレームワークに依存しない設計・実装・改善を支援する。コンテンツモデリング、SDK、画像、検索、プレビュー、Webhook、パフォーマンスを扱う |
+| [`microcms-nextjs`](skills/microcms-nextjs/) | Next.jsとの連携を実装・改善する。App Routerのデータ取得、キャッシュ・ISR、Draft Mode、画像最適化を扱う |
+
+仕様や操作方法の確認には `microcms-docs`、設計・実装の相談には `microcms-guide`、Next.js固有の実装には `microcms-nextjs` を使います。実装中に仕様確認が必要になった場合は、利用可能な `microcms-docs` を併用できます。各Skillは単独でも利用できます。
 
 ---
 
@@ -31,6 +35,10 @@ npx skills add microcmsio/skills --skill microcms-docs --agent codex
 # 複数のエージェントに一括で入れる
 npx skills add microcmsio/skills --skill microcms-docs \
   --agent claude-code --agent cursor --agent codex
+
+# 設計・実装用のスキルを個別に導入する
+npx skills add microcmsio/skills --skill microcms-guide --agent codex
+npx skills add microcmsio/skills --skill microcms-nextjs --agent codex
 
 # 一覧・更新
 npx skills add microcmsio/skills --list
@@ -74,11 +82,17 @@ Claude Code が読む `.claude/skills/` には相対シンボリックリンク�
 ## 使い方
 
 インストール後は、**普通にAIと会話するだけ**でスキルを利用できます。
-例えば以下のように入力すると、microcms-docsスキルが自動で発動します。
+依頼に応じたSkillが選択されます。選択方法は利用するエージェントによって異なります。
 
-> microCMS でカテゴリ別に記事を 10 件取得したい
+| 依頼例 | 対応するSkill |
+|--------|---------------|
+| 「コンテンツAPIのlimitとdepthの仕様を、公式出典付きで確認したい」 | `microcms-docs` |
+| 「ブログのカテゴリ・著者のコンテンツモデルを設計したい」 | `microcms-guide` |
+| 「Next.jsでmicroCMSの更新をWebhookから反映したい」 | `microcms-nextjs` |
 
-明示的に呼び出したい場合は、Claude Code では `/microcms-docs` のようにスキル名を入力します。
+明示的に呼び出したい場合は、Claude Codeでは `/microcms-guide` のようにスキル名を入力します。
+
+Skillの導入・資料参照自体にmicroCMSのAPIキーは不要です。実際のコンテンツ取得・更新を実行する場合は、対象サービスのAPIキーと必要な権限を用意してください。
 
 ---
 
@@ -92,6 +106,20 @@ microCMS 公式が 2 つの MCP サーバーを提供しています。
 | [`microcms-document-mcp-server`](https://document.microcms.io/mcp-server/microcms-document-mcp-server) | 公式ドキュメント参照 |
 
 コンテンツの入稿・管理を行いたい場合は `microcms-mcp-server` を併用してください。
+
+---
+
+## 開発・検証
+
+各Skillは `skills/<skill-name>/SKILL.md` と、そのSkillで必要なreference・メタデータで構成します。新しいSkillを追加するときは、このREADMEの一覧と使い方も更新してください。
+
+`scripts/install.sh` は `skills/` 配下をまとめて導入します。Claude Codeプラグインも標準の `skills/` ディレクトリを使用するため、Skillごとの登録リストはありません。
+
+```bash
+bash scripts/validate.sh
+```
+
+Node.js 24を使用し、CIと同じスクリプトで全Skillの規格と発見可能性を確認します。Claude Code CLIがある場合はプラグイン定義も検証し、対応するGitHub CLIが認証済みの場合は配布のdry-runも実行します。
 
 ---
 
