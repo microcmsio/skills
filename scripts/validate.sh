@@ -36,6 +36,12 @@ for skill_dir in ./skills/*/; do
     npx -y "skills-ref@${SKILLS_REF_VERSION}" validate "$skill_dir"
 done
 
+run "OpenAI ポータブルプラグイン定義の検証" \
+  python3 scripts/validate-openai-plugin.py
+
+run "OpenAI 提出用ZIPの生成" \
+  bash scripts/package-openai-plugin.sh
+
 # ディレクトリを動かしたときに npx skills から見えなくなる事故を検出する。
 run "発見可能性の確認 (skills add --list)" \
   npx -y "skills@${SKILLS_VERSION}" add . --list --full-depth

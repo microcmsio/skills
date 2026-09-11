@@ -1,7 +1,9 @@
-# microCMS Agent Skills
+# microCMS Agent Skills / Plugin
 
 microCMS 公式の [Agent Skills](https://agentskills.io) です。Claude Code / Cursor / Codex など、
 Agent Skills 規格に対応した 40 以上の AI エージェントで動作します。
+
+3つのスキルを、ChatGPT と Codex 共通の Skills-only プラグインとしても配布できる構成です。
 
 インストールすると、AIがmicroCMSに関するAgent Skillsを使ってタスクを実行したり、質問に回答したりするようになります。
 
@@ -64,6 +66,24 @@ gh skill update --all
 /plugin marketplace add microcmsio/skills
 /plugin install microcms@microcms
 ```
+
+### ChatGPT / Codex（プラグインとして）
+
+リポジトリ直下の [`plugin.json`](plugin.json) は Agent Plugins 形式のポータブルマニフェストです。
+ローカルテストでは、このリポジトリをマーケットプレイスとして追加した後、ChatGPT デスクトップアプリの Plugins Directory から `microCMS` をインストールします。
+
+```bash
+codex plugin marketplace add microcmsio/skills
+codex plugin add microcms@microcms
+```
+
+3つのスキルを含む公開提出用プラグインZIPは、次のコマンドで生成できます。
+
+```bash
+bash scripts/package-openai-plugin.sh
+```
+
+OpenAI Platform への提出内容と提出前チェックは [`docs/openai-plugin-submission.md`](docs/openai-plugin-submission.md) にまとめています。
 
 ### 手動コピー
 

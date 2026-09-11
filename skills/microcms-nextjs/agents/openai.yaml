@@ -1,2 +1,3 @@
 interface:
   display_name: "microCMS Next.js"
+  short_description: "Next.jsとmicroCMSの連携・キャッシュ・プレビュー実装を支援"
