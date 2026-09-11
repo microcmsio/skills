@@ -1,0 +1,47 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "microcms",
+  "version": "1.0.0",
+  "description": "microCMSの公式情報に基づき、API設計から実装・運用、Next.js連携までを支援します。",
+  "author": {
+    "name": "microCMS",
+    "url": "https://microcms.io"
+  },
+  "homepage": "https://github.com/microcmsio/skills",
+  "repository": "https://github.com/microcmsio/skills",
+  "license": "MIT",
+  "keywords": [
+    "microcms",
+    "headless-cms",
+    "documentation",
+    "cms"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "microCMS",
+        "shortDescription": "microCMSの設計・実装・Next.js連携ガイド",
+        "longDescription": "microCMSの公式情報に基づき、API設計から実装・運用までを支援します。目的や開発環境に合わせて、コンテンツ設計、Content API、画像最適化、プレビュー、Webhook、Next.js連携などを、根拠となる公式URLと実装例を添えて案内します。このプラグインは公開ドキュメントを参照するガイド機能のみに対応しています。microCMSアカウントへの接続や、コンテンツの作成・更新・削除には対応していません。",
+        "developerName": "microCMS",
+        "category": "Developer Tools",
+        "capabilities": [
+          "microCMSの公式情報を参照",
+          "API設計と実装を支援",
+          "Next.js連携を支援"
+        ],
+        "websiteURL": "https://microcms.io",
+        "supportURL": "https://help.microcms.io/ja/knowledge",
+        "privacyPolicyURL": "https://microcms.io/policy",
+        "termsOfServiceURL": "https://microcms.io/terms",
+        "defaultPrompt": [
+          "microCMSのコンテンツAPIでカテゴリを絞り込む方法を教えて",
+          "Next.jsでmicroCMSの下書きプレビューを実装したい",
+          "microCMS画像APIでWebP変換とリサイズを行う方法を教えて"
+        ],
+        "composerIcon": "./assets/icon.png",
+        "logo": "./assets/icon.png",
+        "logoDark": "./assets/icon-dark.png"
+      }
+    }
+  }
+}

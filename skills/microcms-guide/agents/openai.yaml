@@ -1,2 +1,3 @@
 interface:
   display_name: "microCMS Guide"
+  short_description: "microCMSの設計・実装・改善を公式情報に基づいて支援"
