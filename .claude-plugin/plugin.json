@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin.json",
   "name": "microcms",
   "displayName": "microCMS",
-  "description": "microCMS 公式 Agent Skills。公式ドキュメントの参照、コンテンツ設計・実装、Next.js連携を支援します。導入・資料参照にAPIキーは不要です。",
+  "description": "microCMS 公式 Agent Skills。公式ドキュメントの参照、コンテンツ設計・実装、Next.js連携、WordPressからの移行を支援します。導入・資料参照にAPIキーは不要です。",
   "version": "0.1.0",
   "author": { "name": "microCMS", "url": "https://microcms.io" },
   "homepage": "https://document.microcms.io",

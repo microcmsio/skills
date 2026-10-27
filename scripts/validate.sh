@@ -30,6 +30,9 @@ skip() {
   echo
 }
 
+run "WordPress 移行スクリプトの動作検証（通信なし）" \
+  node skills/microcms-wordpress-migration/examples/test.mjs
+
 # skills-ref validate は1つのディレクトリを受け取るため、各Skillを個別に検証する。
 for skill_dir in ./skills/*/; do
   run "Agent Skills 規格の検証 ($(basename "$skill_dir"))" \
