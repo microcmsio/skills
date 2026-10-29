@@ -91,7 +91,7 @@
 
 ## Release notes
 
-Includes four microCMS skills for ChatGPT and Codex: official documentation lookup, framework-independent implementation guidance, Next.js integration guidance, and WordPress migration. Migration includes example scripts that can read and write using user-configured credentials, or a separately connected official MCP server. No MCP server or account connection is bundled.
+Includes four microCMS skills for ChatGPT and Codex: official documentation lookup, framework-independent implementation guidance, Next.js integration guidance, and WordPress migration. Migration provides guidelines for creating project-specific scripts that can read and write using user-configured credentials, or using a separately connected official MCP server. No sample scripts are bundled. Frontend migration and implementation are outside the migration skill’s scope; Next.js implementation is covered by microcms-nextjs. No MCP server or account connection is bundled.
 
 ## 提出前の人手確認
 

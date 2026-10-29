@@ -19,11 +19,11 @@
 | WXR | 管理画面の「ツール → エクスポート」で「すべてのコンテンツ」 | 全投稿タイプ（下書き・非公開・予約・ゴミ箱を含む）、ターム、著者、コメント（スパムを除く）、postmeta（ACF / SCF の値、SEO のメタ）、ACF / SCF の管理画面で作ったフィールドグループ（`acf-field-group` / `acf-field` 投稿） |
 | `wp-content/uploads` | 管理画面からは取れない。レンタルサーバーのコントロールパネルのファイルマネージャーか FTP / SFTP で zip にする。既存のバックアップ（UpdraftPlus やサーバーの自動バックアップ）に含まれていれば、それでもよい | 画像・PDF などの実ファイル（元画像、縮小版、どこにも使われていないものを含む） |
 
-WXR は `examples/wxr-to-json.mjs` で投稿タイプごとの JSON にする（postmeta のシリアライズも戻す）。`meta` は同じキーの値をまとめた参照用で、`metaEntries` は `{key, value}` の配列として元のレコード順と重複を保持する。1 レコードの配列値と同じキーの複数レコードを区別する必要がある場合は `metaEntries` を読む。出力先には空のディレクトリを使う。書き出しが途中で止まるほど大きいサイトは、投稿タイプごとに分けてエクスポートしてもらう。
+WXR を投稿タイプごとの JSON にするスクリプトを案件ごとに作る（`scripting.md`）。postmeta は PHP シリアライズを安全に復元し、`{key, value}` の配列などで元のレコード順と重複を保持する。1 レコードの配列値と同じキーの複数レコードを区別できる形にする。出力先には空のディレクトリを使う。大きいサイトは、投稿タイプごとに分けてエクスポートしてもらうか、ストリーム処理を使う。
 
-WordPress.com や、メディアを外部のストレージに置くプラグインを使っているサイトには、uploads フォルダがない。添付ファイルに `_wp_attached_file` がない（`wxr-to-json.mjs` の `file` が空）か、URL が `/wp-content/uploads/` でなければこれに当たるので、uploads を頼まずに公開 URL から取得する（2 章）。uploads をまとめて出せない場合も同じ。メディアを zip にするプラグインを本番に入れる方法もあるが、入れるかどうかは依頼者が決める。
+WordPress.com や、メディアを外部のストレージに置くプラグインを使っているサイトには、uploads フォルダがない。添付ファイルに `_wp_attached_file` がないか、URL が `/wp-content/uploads/` でなければこれに当たるので、uploads を頼まずに公開 URL から取得する（2 章）。uploads をまとめて出せない場合も同じ。メディアを zip にするプラグインを本番に入れる方法もあるが、入れるかどうかは依頼者が決める。
 
-表示のための情報（テンプレートの文言、見た目の条件）は集めない（フロントエンドは作り直すため）。WXR を調べて次のことが見つかったときだけ、テーマ（`wp-content/themes/<使用中のテーマ>`）と `wp-content/mu-plugins` のコードを頼む。
+表示のための情報（テンプレートの文言、見た目の条件）は集めない（フロントエンドの移行・実装は対象外のため）。WXR を調べて次のことが見つかったときだけ、テーマ（`wp-content/themes/<使用中のテーマ>`）と `wp-content/mu-plugins` のコードを頼む。
 
 - postmeta の `_<フィールド名>` にフィールドキー（`field_...`）があるのに、WXR のフィールド定義（`acf-field`）に見つからない。コードで登録しているか、名前を変えた名残。値の種類（画像の ID か、投稿への参照か）を確かめるのに要る
 - 本文のショートコードや独自ブロックの意味が、公開ページの HTML を見てもわからない（独自テーブルや設定値を読んでいそうなもの）
@@ -48,21 +48,21 @@ WXR に入らないもの（`wp_options` の値、独自テーブル、プラグ
 
 ## 2. メディアの取り方
 
-画像・ファイルは、もらった `wp-content/uploads` から読む（`upload-media.mjs --uploads <展開したフォルダ>`）。サイトにはアクセスしない。
+画像・ファイルは、もらった `wp-content/uploads` から読む。サイトにはアクセスしない。
 
 - **上げる対象**は、使われているものだけ。WXR の添付ファイルのうち、アイキャッチ・カスタムフィールド・本文から参照されているものと、本文に直接書かれた画像（`<img src>`、`[gallery ids]`、`[caption]` など）を集める。縮小版や、どこにも使われていない画像は上げない
-- **URL → ファイル**：URL の `/wp-content/uploads/` より後ろが uploads フォルダ内のパスになる（日本語のファイル名は URL デコードする）。旧ドメインや `http://` の URL でも同じ。縮小版（`-300x200`）の URL は、まずそのままの名前で添付ファイルを探し（元画像の名前に `-300x200` が付いていることがある）、なければ `-WxH` を外して探す。縮小版は元画像の名前から作られるので、外した名前は `-scaled` ではなく元画像（`original_file`）に一致することがある。そのときは、その添付ファイルの `file`（`-scaled`）に寄せ、同じ画像を二度上げない
-- **2560px を超える画像**は、WordPress が縮小した `-scaled` が添付ファイルの本体（`_wp_attached_file`）になっていて、元画像は `_wp_attachment_metadata` の `original_image` にある（`wxr-to-json.mjs` が `file` と `original_file` に出す）。既定は `-scaled` を上げる
+- **URL → ファイル**：URL の `/wp-content/uploads/` より後ろが uploads フォルダ内のパスになる（日本語のファイル名は URL デコードする）。旧ドメインや `http://` の URL でも同じ。縮小版（`-300x200`）の URL は、まずそのままの名前で添付ファイルを探し（元画像の名前に `-300x200` が付いていることがある）、なければ `-WxH` を外して探す。縮小版は元画像の名前から作られるので、外した名前は `-scaled` ではなく元画像のパスに一致することがある。そのときは、その添付ファイルの本体（`-scaled`）に寄せ、同じ画像を二度上げない
+- **2560px を超える画像**は、WordPress が縮小した `-scaled` が添付ファイルの本体（`_wp_attached_file`）になっていて、元画像は `_wp_attachment_metadata` の `original_image` にある。書き出し時に縮小版と元画像のパスを区別して残す。既定は `-scaled` を上げる
 - **uploads にないファイル**（移行元でも消えている）と、**uploads 以外の URL**（外部サービス、S3 や CDN に置くプラグイン）は、`media-skipped.json` に出る。外部の URL は公開 URL から取るか、人に確認する
-- uploads をもらえないときだけ、公開 URL から取得する（`--uploads` を付けない）。Basic 認証や IP 制限、WAF で弾かれることがある
+- uploads をもらえないときだけ、公開 URL から取得する。Basic 認証や IP 制限、WAF で弾かれることがある
 
 ## 3. 構造の洗い出し
 
 次の一覧を作り、`plan.md` に件数つきで書く。
 
-- 投稿タイプ・状態ごとの件数：`wxr-to-json.mjs` の `counts.json`
-- タクソノミーとタームの数：`terms.json`
-- postmeta のキーと件数：全投稿の `meta` のキーを数える
+- 投稿タイプ・状態ごとの件数：書き出しスクリプトで集計した件数表
+- タクソノミーとタームの数：書き出したターム一覧
+- postmeta のキーと件数：全投稿のメタデータからキー別に集計する
 - 投稿タイプ・タクソノミー・フィールドの定義：WXR のフィールド定義と値の形、公開ページから読み取る。コードをもらった場合は下記も探す
 
 WP-CLI が使える場合は `wp post-type list`、`wp taxonomy list`、`wp post list --post_status=any --format=count`、`wp plugin list` でも確かめられる。
@@ -114,7 +114,7 @@ Elementor のデータは本文ではなく postmeta（`_elementor_data`、JSON�
 
 ## 5. カスタムフィールド（ACF / SCF）
 
-ACF と Secure Custom Fields（SCF。ACF から分かれたもの）は同じ形式で postmeta に保存する。日本で多い Smart Custom Fields は別の形式（同じキーに複数の値、定義は `smart-custom-fields` 投稿）なので、下の表は当てはまらない。WXR から読むときは、次の形式を自分で組み立て直す（`wxr-to-json.mjs` はシリアライズを戻すところまで）。
+ACF と Secure Custom Fields（SCF。ACF から分かれたもの）は同じ形式で postmeta に保存する。日本で多い Smart Custom Fields は別の形式（同じキーに複数の値、定義は `smart-custom-fields` 投稿）なので、下の表は当てはまらない。WXR から読むときは、次の形式を自分で組み立て直す。シリアライズの復元と、フィールド定義に沿った再構築を分ける。
 
 | フィールド | postmeta の形 |
 |---|---|
@@ -128,7 +128,7 @@ ACF と Secure Custom Fields（SCF。ACF から分かれたもの）は同じ形
 
 フィールドグループの定義から、各フィールドの種類と入れ子を一覧にする。定義は 3 か所にあり得るので、全部見る。
 
-- 管理画面で作ったもの：WXR の `acf-field-group`（グループ）と `acf-field`（フィールド。`post_parent` がグループかリピーターなどの親フィールド、`post_excerpt` がフィールド名、`post_name` がフィールドキー）。設定は本文にシリアライズされていて、`wxr-to-json.mjs` が `settings` に戻す
+- 管理画面で作ったもの：WXR の `acf-field-group`（グループ）と `acf-field`（フィールド。`post_parent` がグループかリピーターなどの親フィールド、`post_excerpt` がフィールド名、`post_name` がフィールドキー）。設定は本文にシリアライズされているため、書き出し時に復元して保存する
 - コードで登録したもの：テーマやプラグインの `acf_add_local_field_group()`
 - `acf-json/` フォルダ（テーマ内）の JSON
 
@@ -145,7 +145,7 @@ WP-CLI が使える場合は、PHP の `get_fields($id)` で整形済みの値�
 - **設定値**：`wp_options` のシリアライズされた配列（会社情報、SNS リンクなど）。microCMS のオブジェクト形式 API に移すのが自然。
 - **メニュー**：`nav_menu_item` 投稿。microCMS では設定用のオブジェクト形式 API にするか、フロントエンドの設定に持つ。
 - **SEO**：Yoast（`_yoast_wpseo_title`、`_yoast_wpseo_metadesc`）、Rank Math（`rank_math_title`、`rank_math_description`）など。プラグインごとにキーが違う。
-- **フォーム**：プラグインが出力しているものは移せない。フロントエンドで作り直す前提で一覧にだけ載せる。
+- **フォーム**：プラグインが出力しているものは移せない。別作業が必要な項目として一覧に載せ、フロントエンド担当者へ引き継ぐ。
 
 ## 7. よくある落とし穴
 

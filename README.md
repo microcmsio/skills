@@ -14,7 +14,7 @@ Agent Skills 規格に対応した 40 以上の AI エージェントで動作�
 | [`microcms-docs`](skills/microcms-docs/) | 公式開発者ドキュメントから、API仕様・制限・管理画面の操作手順などの最新情報と出典を確認する |
 | [`microcms-guide`](skills/microcms-guide/) | フレームワークに依存しない設計・実装・改善を支援する。コンテンツモデリング、SDK、画像、検索、プレビュー、Webhook、パフォーマンスを扱う |
 | [`microcms-nextjs`](skills/microcms-nextjs/) | Next.jsとの連携を実装・改善する。App Routerのデータ取得、キャッシュ・ISR、Draft Mode、画像最適化を扱う |
-| [`microcms-wordpress-migration`](skills/microcms-wordpress-migration/) | WordPressからmicroCMSへの移行を支援する。棚卸し、スキーマ設計、メディア・本文変換、登録スクリプト、検証を扱う |
+| [`microcms-wordpress-migration`](skills/microcms-wordpress-migration/) | WordPressからmicroCMSへの移行を支援する。棚卸し、スキーマ設計、メディア・本文変換、案件用スクリプトの作成指針、検証を扱う。フロントエンドは対象外 |
 
 仕様や操作方法の確認には `microcms-docs`、設計・実装の相談には `microcms-guide`、Next.js固有の実装には `microcms-nextjs`、WordPressからのデータ移行には `microcms-wordpress-migration` を使います。実装中に仕様確認が必要になった場合は、利用可能な `microcms-docs` を併用できます。各Skillは単独でも利用できます。
 
@@ -115,7 +115,7 @@ Claude Code が読む `.claude/skills/` には相対シンボリックリンク�
 
 明示的に呼び出したい場合は、Claude Codeでは `/microcms-guide` のようにスキル名を入力します。
 
-Skillの導入・資料参照自体にmicroCMSのAPIキーは不要です。実際のコンテンツ取得・更新を実行する場合は、対象サービスのAPIキーと必要な権限を用意してください。移行の参考スクリプトはNode.js 24以上で実行し、接続情報は `.env` に設定して `node --env-file=.env …` で読み込みます。プラグイン自体にはアカウント接続機能やMCPサーバーを同梱していません。
+Skillの導入・資料参照自体にmicroCMSのAPIキーは不要です。実際のコンテンツ取得・更新を実行する場合は、対象サービスのAPIキーと必要な権限を用意してください。移行スクリプトは同梱せず、ガイドラインに沿って案件ごとに作成します。フロントエンドの移行・実装は対象外で、Next.jsの実装には `microcms-nextjs` を案内します。プラグイン自体にはアカウント接続機能やMCPサーバーを同梱していません。
 
 ---
 

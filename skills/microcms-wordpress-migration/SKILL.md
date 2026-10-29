@@ -1,6 +1,6 @@
 ---
 name: microcms-wordpress-migration
-description: WordPress などの既存 CMS から microCMS へコンテンツを移行するための手順書と品質チェック。構造の洗い出し、microCMS スキーマ設計、メディアのアップロードと URL 置換、リッチエディタ用 HTML 変換、何度でも流し直せる登録スクリプト、件数・取りこぼし検証、リダイレクト表までを扱う。WordPress から microCMS への移行、WXR / WP REST API / ACF / カスタム投稿タイプ / Gutenberg / ショートコードを microCMS に持っていく話、microCMS へのコンテンツ一括登録・インポート、ヘッドレス化に伴うデータ移行の見積もりや事前調査を頼まれたら、「スキル」と言われなくても必ずこのスキルを使うこと。
+description: WordPress などの既存 CMS から microCMS へコンテンツを移行するための手順書と品質チェック。構造の洗い出し、microCMS スキーマ設計、メディアのアップロードと URL 置換、リッチエディタ用 HTML 変換、案件ごとの移行スクリプト作成指針、件数・取りこぼし検証、リダイレクト表までを扱う。WordPress から microCMS への移行、WXR / WP REST API / ACF / カスタム投稿タイプ / Gutenberg / ショートコードを microCMS に持っていく話、microCMS へのコンテンツ一括登録・インポート、ヘッドレス化に伴うデータ移行の見積もりや事前調査で使用する。フロントエンドの移行・実装は対象外。
 ---
 
 # microCMS 移行
@@ -11,6 +11,12 @@ description: WordPress などの既存 CMS から microCMS へコンテンツを
 2. 同じ入力から同じ結果になるスクリプトにして、何度でも流し直せるようにする
 3. 変換できなかったものを 1 件残らず記録して、人が直す作業リストにする
 
+## 対象範囲
+
+扱うのはコンテンツ・メディアの調査、スキーマ設計、変換・登録・検証と引き継ぎ資料の作成まで。WordPress のテーマ、テンプレート、CSS、画面機能の移植や新サイトの実装、リダイレクトの設定・本番切り替えは行わない。本文の意味を保つための HTML 変換と、旧 URL の対応表作成はデータ移行に含む。
+
+フロントエンドの実装も求められた場合は別作業として扱い、Next.js なら `microcms-nextjs` を案内する（https://github.com/microcmsio/skills/tree/main/skills/microcms-nextjs）。未導入なら導入先を案内し、このスキルだけでフロントエンド実装を進めない。Next.js 以外を想定している場合は、フレームワークを勝手に変更しない。
+
 ## 読む順番
 
 | いつ | 読むもの |
@@ -18,34 +24,18 @@ description: WordPress などの既存 CMS から microCMS へコンテンツを
 | 最初に必ず | `references/general.md`（全体の流れと、人が判断する場所） |
 | 移行元が WordPress | `references/wordpress.md`（取り出し方と構造の洗い出し） |
 | スキーマを決めるとき・登録スクリプトを書くとき | `references/microcms.md`（フィールド対応表と API の制約） |
+| スクリプトを作るとき | `references/scripting.md`（入出力・再実行・失敗記録・検証の実装指針） |
 | `plan.md` を人に見せる前 | `references/plans.md`（料金プランの上限との照らし合わせと、超過時の費用） |
 | 本文（HTML）を変換するとき | `references/richeditor.md`（入稿できる HTML と変換表） |
-| 登録後・切り替え前 | `references/validation.md`（品質チェックと報告書の形） |
+| 登録後・引き継ぎ前 | `references/validation.md`（品質チェックと報告書の形） |
 
 WordPress 以外（Movable Type、独自 CMS、静的 HTML など）が移行元のときも、`general.md`・`microcms.md`・`richeditor.md`・`validation.md` はそのまま使える。`wordpress.md` の「構造の洗い出し」の考え方を移行元に合わせて読み替える。
 
-## 参考実装（`examples/`）
+## 移行スクリプトの作成
 
-案件が違っても同じになる処理には、参考実装（無保証）を置いてある。**そのまま実行する完成品ではない。** 案件の `migration/scripts/` にコピーし、中身を読んで、その案件の条件（プラン、件数、移行元の形）に合っているか確かめ、必要なら直してから使う。
+サンプルスクリプトは同梱しない。AI は棚卸しと承認済みの対応表に基づき、案件用のスクリプトを `migration/scripts/` に作る。作成時は `references/scripting.md` を読み、移行元固有の取り出しは `wordpress.md`、API 操作は `microcms.md`、本文変換は `richeditor.md` に従う。実行言語や依存パッケージは案件の環境に合わせて選ぶ。
 
-- `examples/.env.example` — 接続情報の項目の見本。
-- `examples/wxr-to-json.mjs` — WXR を投稿タイプごとの JSON にする。postmeta と ACF / SCF のフィールド定義のシリアライズを戻し、添付ファイルには uploads フォルダ内のパス（`-scaled` の元画像も）を付ける。`node wxr-to-json.mjs wordpress.xml raw`。出力先は空のディレクトリに限る。再取得時は `raw-final/` など別の空ディレクトリへ出し、変換スクリプトの入力先も切り替える。
-- `examples/upload-media.mjs` — メディアを microCMS にアップロードし、「旧 URL → 新 URL」の対応表を作る。`--uploads` を付けると、もらった `wp-content/uploads` からファイルを読む（サイトにはアクセスしない）。途中で止まっても再開できる。未解決一覧は前回分を保持し、残っていれば終了コード 1。同じ旧 URL の画像を差し替えた場合は、その URL の入力だけに `--force` を付けて再アップロードし、本文と画像フィールドも変換し直す。5MB を超える画像は、圧縮した手元のファイルを指定して上げられる。上げられないものは別リストに出す。
-- `examples/upsert.mjs` — 変換済みのコンテンツ（JSON）を指定した ID で登録し、既存なら `legacyId`・`legacyUrl` の一致を確認してから更新する（リスト形式の API 専用）。本文と公開状態を分けて更新し、最終状態を検証する。扱えない公開状態や ID 衝突は失敗として記録する。回数制限に合わせて待ち、429 / 5xx は再試行する。検査でエラーになったもの（PUT の上限超えなど）は飛ばしてログに残し、残りを続ける。`--dry-run` で書き込まずに検査だけできる。
-- `examples/microcms.mjs` — `upload-media.mjs` と `upsert.mjs` の共通部品（認証、回数制限、再試行、書き込み前の検査）。`examples/test.mjs` で共通部品・WXR変換・メディアCLIの動作を通信なしに確かめられる。直したらこれも流す。
-
-Node.js 24 以上、依存パッケージなし。microCMS 側は環境変数 `MICROCMS_SERVICE_DOMAIN` と `MICROCMS_API_KEY` を使う。
-
-件数が少ない（数十件程度の）移行なら、スクリプトを使わず microCMS の MCP サーバーのツール（一括作成は 1 回 20 件まで）で直接入れてもよい。その場合も ID の付け方、登録の順番、検証は同じ手順で行う。
-
-参考実装で確かめてあるのは、WordPress 6 系の WXR（記事が数百件）の変換と、数十件の登録だけ。次の状況では、そのままでは動かないか結果が欠けるので、案件に合わせて直す。直せないものは `plan.md` に書いて人に知らせる。
-
-- 記事やメディアが数万件ある（`wxr-to-json.mjs` は WXR を一度に読み込むので、メモリが足りなくなる。投稿タイプごとに分けてエクスポートしてもらう）
-- マルチサイト（WXR はサイトごとにエクスポートしてもらい、サイトごとに変換する）
-- `wp-content/uploads` がもらえず、公開 URL から取るしかない。認証や直リンク禁止があると、`upload-media.mjs` の取得が失敗し、上げられなかったものの一覧に入る
-- 登録の処理を同時に複数流す（回数制限の管理は 1 つの処理の中だけなので、制限を超える）
-
-microCMS の形への変換スクリプトは、参考実装を置いていない。洗い出しの結果を見て案件ごとに書く。
+件数が少ない移行なら、利用可能な microCMS の MCP ツールで直接登録してもよい。その場合も ID の付け方、登録の順番、対応表・失敗記録、登録後の検証は同じ手順で行う。
 
 ## 作業ディレクトリ
 
@@ -55,12 +45,12 @@ microCMS の形への変換スクリプトは、参考実装を置いていな�
 migration/
 ├── plan.md            # 洗い出し結果・構造の対応表・既定の扱い・先に決めてほしいこと（人が承認する）
 ├── input/             # 受け取ったファイル（WXR、wp-content/uploads を展開したもの）
-├── raw/               # 移行元から取り出したそのままのデータ（wxr-to-json.mjs の出力。wxr-warnings.json を含む）
+├── raw/               # 移行元から取り出したそのままのデータ（書き出しの警告を含む）
 ├── transformed/       # microCMS の形に変換済みの JSON（登録スクリプトの入力）
 ├── media-map.json     # 旧 URL → 新 URL の対応表
 ├── media-skipped.json # 上げられなかったメディアと理由
 ├── logs/              # 変換時の警告、登録前の検査結果、登録結果
-├── scripts/           # この案件用のスクリプト（examples/ からコピーして直したもの＋変換スクリプト）
+├── scripts/           # この案件用のスクリプト（案件ごとに作成）
 ├── redirects.csv      # 旧 URL → 新 URL のリダイレクト表
 └── report.md          # 検証結果、人が直す作業リスト
 ```
@@ -69,7 +59,7 @@ migration/
 
 認証情報は、会話・ファイル・ログに一度でも書かれると取り消せない。
 
-- **すべて `.env` に入れてもらう**（`.gitignore` に入れる）。項目は `examples/.env.example` を見本にする。スクリプトは環境変数から読む。`.env` は自動では読み込まれないので、接続するコマンドは `node --env-file=.env scripts/upsert.mjs transformed --dry-run`、`node --env-file=.env scripts/upsert.mjs transformed`、`node --env-file=.env scripts/upload-media.mjs media-urls.json --uploads input/uploads` の形で実行する（`migration/` で実行）。WXR 変換と通信なしのテストに `.env` は不要。
+- **接続情報は `.env` など実行環境の秘密情報管理に設定する**（`.env` は `.gitignore` に入れる）。スクリプトは `MICROCMS_SERVICE_DOMAIN` と `MICROCMS_API_KEY` を環境変数から読み、値をコードに埋め込まない。実行環境に合う読み込み方法とコマンドを案件の `plan.md` に記録する。ローカルデータの変換や通信なしの検証に認証情報は不要。
 - **値を表示しない。** 確認するときは「`MICROCMS_API_KEY`：設定済み／空／未設定」のように、名前と状態だけを報告する。`.env` を `cat` しない。
 - **依頼文やチャットで値を渡されたら、** その値をファイルにもコマンドにも書き写さず、`.env` に入れ直してもらう。会話に残った値は無効にして発行し直すよう勧める。
 - **`plan.md`、`report.md`、`logs/` に値を書かない。** 取り出した `raw/` の著者やコメントにはメールアドレスが入っている。移行に必要なものだけを残す。
@@ -89,9 +79,9 @@ migration/
 
 ## ID 衝突と流し直し
 
-入力 JSON の `identity` と `content` の両方に、移行元の `legacyId` と `legacyUrl` を入れる（例は `examples/upsert.mjs`）。同じ ID が存在しても、両方が一致するまで更新しない。PUT の 400 は既存コンテンツの証拠にしない。識別情報のない既存データや、別の移行元と衝突したものは失敗として記録し、別 ID にするか、対応表を確認して採用するかを人に決めてもらう。識別情報を推測で後付けして更新を通さない。
+入力 JSON の `identity` と `content` の両方に、移行元の `legacyId` と `legacyUrl` を入れる（形式は `references/scripting.md`）。同じ ID が存在しても、両方が一致するまで更新しない。PUT の 400 は既存コンテンツの証拠にしない。識別情報のない既存データや、別の移行元と衝突したものは失敗として記録し、別 ID にするか、対応表を確認して採用するかを人に決めてもらう。識別情報を推測で後付けして更新を通さない。
 
-`--dry-run` はローカル入力の検査だけで、接続先の ID 衝突・公開状態・権限は確認しない。スクリプト実行中は管理画面や別プロセスから同じコンテンツを編集しない。本文と公開状態の変更は一括処理ではなく、途中失敗で一部だけ反映されることがある。失敗した ID の本文・状態を確認してから流し直す。
+書き込まない事前検査を用意し、ローカル入力の検査と、接続先を読み取る検査を分ける。ローカル検査だけでは接続先の ID 衝突・公開状態・権限は確認できない。スクリプト実行中は管理画面や別プロセスから同じコンテンツを編集しない。本文と公開状態の変更は一括処理ではなく、途中失敗で一部だけ反映されることがある。失敗した ID の本文・状態を確認してから流し直す。
 
 ## 最後の報告
 
