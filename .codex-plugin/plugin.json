@@ -18,14 +18,15 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "microCMS",
-    "shortDescription": "microCMSの設計・実装・Next.js連携ガイド",
-    "longDescription": "microCMSの公式情報に基づき、API設計から実装・運用までを支援します。目的や開発環境に合わせて、コンテンツ設計、Content API、画像最適化、プレビュー、Webhook、Next.js連携などを、根拠となる公式URLと実装例を添えて案内します。このプラグインは公開ドキュメントを参照するガイド機能のみに対応しています。microCMSアカウントへの接続や、コンテンツの作成・更新・削除には対応していません。",
+    "shortDescription": "microCMSの設計・実装・Next.js連携・WordPress移行",
+    "longDescription": "microCMSの公式情報に基づき、API設計から実装・運用、Next.js連携、WordPressからのコンテンツ移行を支援します。公式URLと実装例を添えて案内し、移行ではデータの調査、スキーマ設計、変換・登録スクリプトの作成、検証を扱います。アカウント接続機能やMCPサーバーは同梱していません。実際の取得・書き込みには、利用者が実行環境に設定したAPIキー、または別途接続した公式MCPサーバーを使い、対象サービスと操作範囲を確認して実行します。",
     "developerName": "microCMS",
     "category": "Developer Tools",
     "capabilities": [
       "microCMSの公式情報を参照",
       "API設計と実装を支援",
-      "Next.js連携を支援"
+      "Next.js連携を支援",
+      "WordPressからの移行を支援"
     ],
     "websiteURL": "https://microcms.io",
     "supportURL": "https://help.microcms.io/ja/knowledge",
