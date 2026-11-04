@@ -1,11 +1,11 @@
 ---
 name: microcms-wordpress-migration
-description: WordPress などの既存 CMS から microCMS へコンテンツを移行するための手順書と品質チェック。構造の洗い出し、microCMS スキーマ設計、メディアのアップロードと URL 置換、リッチエディタ用 HTML 変換、案件ごとの移行スクリプト作成指針、件数・取りこぼし検証、リダイレクト表までを扱う。WordPress から microCMS への移行、WXR / WP REST API / ACF / カスタム投稿タイプ / Gutenberg / ショートコードを microCMS に持っていく話、microCMS へのコンテンツ一括登録・インポート、ヘッドレス化に伴うデータ移行の見積もりや事前調査で使用する。フロントエンドの移行・実装は対象外。
+description: WordPress から microCMS へコンテンツを移行するための手順書と品質チェック。構造の洗い出し、microCMS スキーマ設計、メディアのアップロードと URL 置換、リッチエディタ用 HTML 変換、案件ごとの移行スクリプト作成指針、件数・取りこぼし検証、リダイレクト表までを扱う。WordPress から microCMS への移行、WXR / WP REST API / ACF / カスタム投稿タイプ / Gutenberg / ショートコードを microCMS に持っていく話、WordPress コンテンツの一括登録・インポート、WordPress から microCMS への移行の見積もりや事前調査で使用する。フロントエンドの移行・実装は対象外。
 ---
 
-# microCMS 移行
+# WordPress から microCMS への移行
 
-既存 CMS（主に WordPress）から microCMS へコンテンツを移す。**案件ごとに移行スクリプトを書き、毎回同じ手順で検証する。** 全部を自動で変換することは目指さない。目指すのは次の 3 つ。
+WordPress から microCMS へコンテンツを移す。**案件ごとに移行スクリプトを書き、毎回同じ手順で検証する。** 全部を自動で変換することは目指さない。目指すのは次の 3 つ。
 
 1. 移行できるもの・できないものを、書き込む前に人が判断できる形で出す
 2. 同じ入力から同じ結果になるスクリプトにして、何度でも流し直せるようにする
@@ -22,14 +22,12 @@ description: WordPress などの既存 CMS から microCMS へコンテンツを
 | いつ | 読むもの |
 |---|---|
 | 最初に必ず | `references/general.md`（全体の流れと、人が判断する場所） |
-| 移行元が WordPress | `references/wordpress.md`（取り出し方と構造の洗い出し） |
+| 移行元を調査するとき | `references/wordpress.md`（取り出し方と構造の洗い出し） |
 | スキーマを決めるとき・登録スクリプトを書くとき | `references/microcms.md`（フィールド対応表と API の制約） |
 | スクリプトを作るとき | `references/scripting.md`（入出力・再実行・失敗記録・検証の実装指針） |
 | `plan.md` を人に見せる前 | `references/plans.md`（料金プランの上限との照らし合わせと、超過時の費用） |
 | 本文（HTML）を変換するとき | `references/richeditor.md`（入稿できる HTML と変換表） |
 | 登録後・引き継ぎ前 | `references/validation.md`（品質チェックと報告書の形） |
-
-WordPress 以外（Movable Type、独自 CMS、静的 HTML など）が移行元のときも、`general.md`・`microcms.md`・`richeditor.md`・`validation.md` はそのまま使える。`wordpress.md` の「構造の洗い出し」の考え方を移行元に合わせて読み替える。
 
 ## 移行スクリプトの作成
 
