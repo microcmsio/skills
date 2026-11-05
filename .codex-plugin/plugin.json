@@ -1,6 +1,6 @@
 {
   "name": "microcms",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "microCMSの公式情報に基づき、API設計から実装・運用、Next.js連携までを支援します。",
   "author": {
     "name": "microCMS",
